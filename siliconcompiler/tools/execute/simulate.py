@@ -6,8 +6,6 @@ class SimulateTask(Task):
     def __init__(self):
         super().__init__()
 
-        self.add_parameter("additional_files", "[file]", "additional initialization files")
-
     def tool(self):
         return "execute"
 
@@ -29,10 +27,9 @@ class SimulateTask(Task):
         exe_dir = os.path.dirname(exe_path)
         exe_file = os.path.basename(exe_path)
 
-        for src in self.get("var", "additional_files") or []:
-            if not os.path.exists(src):
-                raise FileNotFoundError(f"Additional file not found: {src}")
-            shutil.copy2(src, "inputs/")
+        for lib, fileset in self.project.get_filesets():
+            for value in lib.get_file(fileset=fileset, filetype="meminit"):
+                shutil.copy2(value, "inputs/")
 
         result = subprocess.run(
             [f"./{exe_file}"], 

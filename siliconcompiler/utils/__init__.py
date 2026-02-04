@@ -151,6 +151,9 @@ def get_default_iomap() -> Dict[str, str]:
     image_jpg = ('jpg', 'jpeg')
     image_bmp = ('bmp',)
 
+    # Memory Initialization Files
+    meminit = ('hex', 'bin')
+
     # Build default map with fileset and type
     default_iomap = {}
     default_iomap.update({ext: "c" for ext in hll_c})
@@ -198,6 +201,8 @@ def get_default_iomap() -> Dict[str, str]:
     default_iomap.update({ext: "tcl" for ext in tcl})
 
     default_iomap.update({ext: "verilatorctrlfile" for ext in verilator})
+
+    default_iomap.update({ext: "meminit" for ext in meminit})
 
     return default_iomap
 
