@@ -29,7 +29,14 @@ class SimulateTask(Task):
 
         for lib, fileset in self.project.get_filesets():
             for value in lib.get_file(fileset=fileset, filetype="meminit"):
-                shutil.copy2(value, "inputs/")
+                original_name = os.path.basename(value)
+                name_part, extension = os.path.splitext(original_name)
+                
+                clean_name = name_part.rpartition('_')[0]
+                final_filename = f"{clean_name}{extension}" if clean_name else original_name
+                
+                dest_path = os.path.join("inputs/", final_filename)
+                shutil.copy2(value, dest_path)
 
         result = subprocess.run(
             [f"./{exe_file}"], 
