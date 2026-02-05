@@ -38,17 +38,21 @@ class SimulateTask(Task):
                 dest_path = os.path.join("inputs/", final_filename)
                 shutil.copy2(value, dest_path)
 
-        result = subprocess.run(
-            [f"./{exe_file}"], 
-            cwd=exe_dir, 
-            capture_output=True, 
-            text=True
+        process = subprocess.Popen(
+            [f"./{exe_file}"],
+            cwd=exe_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1
         )
 
-        print(result.stdout)
-        print(result.stderr)
+        for line in process.stdout:
+            print(line, end="")
+
+        process.wait()
 
         for report_file in glob.glob("inputs/reports/*"):
             shutil.move(report_file, "reports/")
 
-        return result.returncode
+        return process.returncode
